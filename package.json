@@ -1,0 +1,24 @@
+{
+    "name": "onay-bot",
+    "version": "0.1.0",
+    "description": "Unofficial Onay Telegram bot",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "Nikita Bayev <nikita@bayev.kz> (http://bayev.kz/)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/drugoi/onay-bot"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "body-parser": "^1.15.0",
+        "botanio": "0.0.6",
+        "curlrequest": "^0.5.7",
+        "express": "^4.13.4",
+        "newrelic": "^1.26.2",
+        "node-telegram-bot-api": "^0.21.1",
+        "redis": "^2.5.3"
+    }
+}

@@ -79,7 +79,18 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
             bot.sendMessage(chatId, Messages.systemError);
           } else if (isDataJson) {
             let cardData = curlData;
-            // {"type":true,"result":{"pan":"9643108503304055603","stopList":false,"type":"01.01","name":"ETK-OnLine","balance":"208000"},"message":"OK"}
+            // let example = {
+            //   result: {
+            //     pan: "9643108503304055603",
+            //     shortPan: "9850330405560106",
+            //     stopList: false,
+            //     type: "01.01",
+            //     name: "ETK-OnLine",
+            //     balance: 120000
+            //   },
+            //   type: true,
+            //   message: "OK"
+            // };
             if (cardData.type) {
               let balance = curlData.result.balance / 100;
               let tripsCount = {
@@ -88,10 +99,10 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
               };
               let messageText = 'Номер карты: *' + currentPan + '*; \n' +
                 'Ваш баланс: *' + balance + '* тенге; \n';
-              messageText += onayTypeId !== 0 ? 'У вас льготная карта' : '';
+              messageText += onayTypeId !== 0 ? 'У вас льготная карта \n' : '';
               messageText += onayTypeId === 0 ? 'Количество поездок: *' + tripsCount.standart + '*;' : 'Количество поездок: *' + tripsCount.benefit + '*;\n';
               messageText += 'Проблема на стороне *ЕТК ОҢАЙ*, возможны не точные данные по балансу карты.\n';
-              messageText += 'Для точной проверки баланса воспользуйтесь сервисом Beeline — https://money.beeline.kz/services/onay_parent';
+              messageText += 'Для точной проверки баланса воспользуйтесь сервисом [Beeline](https://money.beeline.kz/services/onay_parent)';
               console.info(messageText);
               bot.sendMessage(chatId, messageText, {
                 parse_mode: 'Markdown'

@@ -101,7 +101,7 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
                 'Ваш баланс: *' + balance + '* тенге; \n';
               messageText += onayTypeId !== 0 ? 'У вас льготная карта \n' : '';
               messageText += onayTypeId === 0 ? 'Количество поездок: *' + tripsCount.standart + '*;\n' : 'Количество поездок: *' + tripsCount.benefit + '*;\n';
-              messageText += process.env.ONAY_ERROR ? 'Проблема на стороне *ЕТК ОҢАЙ*, возможны не точные данные по балансу карты.\n' : '';
+              // messageText += process.env.ONAY_ERROR ? 'Проблема на стороне *ЕТК ОҢАЙ*, возможны не точные данные по балансу карты.\n' : '';
               // messageText += process.env.ONAY_ERROR ? 'Для точной проверки баланса воспользуйтесь сервисом [Beeline](https://money.beeline.kz/services/onay_parent)' : '';
               console.info(messageText);
               bot.sendMessage(chatId, messageText, {

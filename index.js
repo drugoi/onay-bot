@@ -1,2 +1,2 @@
-var bot = require('./bot');
+import bot from './bot';
 require('./server')(bot);

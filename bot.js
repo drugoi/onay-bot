@@ -73,7 +73,7 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
           } catch (err) {
             isDataJson = false;
           }
-          if (curlData.errordetail && curlData.errordetail.length) {
+          if (curlData && curlData.errordetail && curlData.errordetail.length) {
             console.error(err);
             bot.sendMessage(ownerChatId, '#ошибкаОнай: ' + curlData.errordetail);
             bot.sendMessage(chatId, Messages.systemError);

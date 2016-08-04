@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 const packageInfo = require('./package.json');
 const bodyParser = require('body-parser');
 
-let app = express();
+const app = express();
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
@@ -14,8 +14,8 @@ app.get('/', function(req, res) {
 });
 
 const server = app.listen(process.env.PORT, function() {
-  let host = server.address().address;
-  let port = server.address().port;
+  const host = server.address().address;
+  const port = server.address().port;
 
   console.log('Web server started at http://%s:%s', host, port);
 });

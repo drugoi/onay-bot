@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('newrelic');
 const Messages = require('./messages.json');
@@ -12,7 +12,7 @@ const ownerChatId = 3378577;
 
 let redis;
 if (process.env.REDIS_URL) {
-  let redisUrl = require('url').parse(process.env.REDIS_URL);
+  const redisUrl = require('url').parse(process.env.REDIS_URL);
   redis = require('redis').createClient(redisUrl.port, redisUrl.hostname);
   redis.auth(redisUrl.auth.split(':')[1]);
 } else {
@@ -41,14 +41,13 @@ const onayChunkNumbers = {
 let onayTypeId = 0;
 
 bot.getMe().then(function(me) {
-    console.info('Onay bot %s initialized!', me.username);
-  })
-  .catch(function(err) {
-    throw new Error(err);
-  });
+  console.info('Onay bot %s initialized!', me.username);
+}).catch(function(err) {
+  throw new Error(err);
+});
 
 bot.onText(/\/start/, function(message) {
-  let chatId = message.chat.id;
+  const chatId = message.chat.id;
   botan.track(message, 'Start');
   bot.sendMessage(chatId, Messages.welcome);
 });
@@ -61,8 +60,8 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
     if (panLength && !isNaN(cleanedPan)) {
       botan.track(message, 'Balance');
       if (panLength === 19 || panLength === 8) {
-        let currentPan = panLength === 8 ? onayChunkNumbers[type] + cleanedPan : cleanedPan;
-        let requestOptions = {
+        const currentPan = panLength === 8 ? onayChunkNumbers[type] + cleanedPan : cleanedPan;
+        const requestOptions = {
           url: API_URL + currentPan
         };
         curl.request(requestOptions, function(err, data) {
@@ -70,7 +69,7 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
           let curlData;
           try {
             curlData = JSON.parse(data);
-          } catch (err) {
+          } catch (JSONErr) {
             isDataJson = false;
           }
           if (curlData && curlData.errordetail && curlData.errordetail.length) {
@@ -78,7 +77,7 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
             bot.sendMessage(ownerChatId, '#ошибкаОнай: ' + curlData.errordetail);
             bot.sendMessage(chatId, Messages.systemError);
           } else if (isDataJson) {
-            let cardData = curlData;
+            const cardData = curlData;
             // let example = {
             //   result: {
             //     pan: "9643108503304055603",
@@ -92,17 +91,15 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
             //   message: "OK"
             // };
             if (cardData.type) {
-              let balance = curlData.result.balance / 100;
-              let tripsCount = {
+              const balance = curlData.result.balance / 100;
+              const tripsCount = {
                 standart: parseInt(balance / 80),
                 benefit: parseInt(balance / 40)
               };
               let messageText = 'Номер карты: *' + currentPan + '*; \n' +
                 'Ваш баланс: *' + balance + '* тенге; \n';
-              messageText += onayTypeId !== 0 ? 'У вас льготная карта \n' : '';
-              messageText += onayTypeId === 0 ? 'Количество поездок: *' + tripsCount.standart + '*;\n' : 'Количество поездок: *' + tripsCount.benefit + '*;\n';
-              // messageText += process.env.ONAY_ERROR ? 'Проблема на стороне *ЕТК ОҢАЙ*, возможны не точные данные по балансу карты.\n' : '';
-              // messageText += process.env.ONAY_ERROR ? 'Для точной проверки баланса воспользуйтесь сервисом [Beeline](https://money.beeline.kz/services/onay_parent)' : '';
+              messageText += cardData.type !== '01.01' ? 'У вас льготная карта \n' : '';
+              messageText += cardData.type === '01.01' ? 'Количество поездок: *' + tripsCount.standart + '*;\n' : 'Количество поездок: *' + tripsCount.benefit + '*;\n';
               console.info(messageText);
               bot.sendMessage(chatId, messageText, {
                 parse_mode: 'Markdown'
@@ -111,7 +108,7 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
               onayTypeId = 0;
             } else {
               onayTypeId++;
-              let onayTypeKey = Object.keys(onayChunkNumbers)[onayTypeId];
+              const onayTypeKey = Object.keys(onayChunkNumbers)[onayTypeId];
               if (onayTypeKey) {
                 getBalance(chatId, pan, onayTypeKey, message, fromMemory);
               } else {
@@ -133,8 +130,8 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
 };
 
 bot.onText(/\/savecard (.+)/, function(message, match) {
-  let chatId = message.chat.id;
-  let userPan = match[1];
+  const chatId = message.chat.id;
+  const userPan = match[1];
   bot.sendChatAction(chatId, 'typing');
   botan.track(message, 'Save card pan');
   redis.set(chatId, userPan);
@@ -142,7 +139,7 @@ bot.onText(/\/savecard (.+)/, function(message, match) {
 });
 
 bot.onText(/\/getcard/, function(message) {
-  let chatId = message.chat.id;
+  const chatId = message.chat.id;
   botan.track(message, 'Get balance fast');
   redis.get(chatId, function(err, reply) {
     if (reply) {
@@ -154,19 +151,19 @@ bot.onText(/\/getcard/, function(message) {
 });
 
 bot.onText(/\/getbalance (.+)/, function(message, match) {
-  let chatId = message.chat.id;
-  let resp = match[1];
+  const chatId = message.chat.id;
+  const resp = match[1];
   getBalance(chatId, resp, 'standart', message);
 });
 
 bot.onText(/^[0-9]{8,19}$/, function(message) {
-  let chatId = message.chat.id;
+  const chatId = message.chat.id;
   getBalance(chatId, message.text, 'standart', message);
 });
 
 bot.onText(/\/feedback (.+)/, function(message, match) {
-  let USER = message.from.username || message.from.id;
-  let feedbackMessage = match[1];
+  const USER = message.from.username || message.from.id;
+  const feedbackMessage = match[1];
   if (feedbackMessage.length) {
     bot.sendMessage(ownerChatId, '#отзывОнай: ' + feedbackMessage + ' | Пользователь: ' + USER);
     bot.sendChatAction(USER, 'typing');

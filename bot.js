@@ -90,13 +90,12 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
             //   type: true,
             //   message: "OK"
             // };
-            if (cardData.type) {
-              const balance = curlData.result.balance / 100;
+            if (cardData.result.type) {
+              const balance = cardData.result.balance / 100;
               const tripsCount = {
                 standart: parseInt(balance / 80),
                 benefit: parseInt(balance / 40)
               };
-              console.info(cardData.result.type);
               let messageText = 'Номер карты: *' + currentPan + '*; \n' +
                 'Ваш баланс: *' + balance + '* тенге; \n';
               messageText += cardData.result.type !== '01.01' ? 'У вас льготная карта \n' : '';

@@ -96,10 +96,10 @@ var getBalance = (chatId, pan, type, message, fromMemory) => {
                 standart: parseInt(balance / 80),
                 benefit: parseInt(balance / 40)
               };
-              let messageText = 'Номер карты: *' + currentPan + '*; \n' +
-                'Ваш баланс: *' + balance + '* тенге; \n';
+              // TODO: Improve message creating
+              let messageText = `Номер карты: *${currentPan}*; \nВаш баланс: *${balance}* тенге; \n`;
               messageText += cardData.result.type !== '01.01' ? 'У вас льготная карта \n' : '';
-              messageText += cardData.result.type === '01.01' ? 'Количество поездок: *' + tripsCount.standart + '*;\n' : 'Количество поездок: *' + tripsCount.benefit + '*;\n';
+              messageText += cardData.result.type === '01.01' ? `Количество поездок: *${tripsCount.standart}*;\n` : `Количество поездок: *${tripsCount.benefit}*;\n`;
               console.info(messageText);
               bot.sendMessage(chatId, messageText, {
                 parse_mode: 'Markdown'

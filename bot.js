@@ -55,6 +55,9 @@ bot.onText(/\/start/, function(message) {
 var getBalance = (chatId, pan, type, message, fromMemory) => {
   bot.sendChatAction(chatId, 'typing');
   if (pan && pan.length) {
+    if (parseFloat(process.env.IS_ONAY_DOWN)) {
+      bot.sendMessage(chatId, Messages.onayBanned);
+    }
     var cleanedPan = pan.replace(/\s/g, '');
     var panLength = cleanedPan.length;
     if (panLength && !isNaN(cleanedPan)) {
